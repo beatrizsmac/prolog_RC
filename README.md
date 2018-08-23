@@ -30,7 +30,10 @@ ser_humano(reu(X)):- homem(reu(X));
 		     mulher(reu(X)).
 
 %definicao omissao
-omissao(reu(X)):- not(ato(reu(X)), ser_humano(reu(X)), not(inimputavel(reu(X)))).
+omissao(reu(X)):- not(ato(reu(X)), 
+		  ser_humano(reu(X)), 
+		  not(inimputavel(reu(X))),
+		  dever(ato_voluntario(reu(X))).
 
 %definicao dolo
 dolo(reu(X)) :- dolo_direto(reu(X));
@@ -181,6 +184,9 @@ culpa(reu(X)) :- negligente(reu(X)).
 
 %fazer distincao entre culpa consciente e culpa inconsciente?
 
+negligente(reu(X)) :- (preve(reu(X),ato_ilicito), omissao(reu(X)));
+		      (não_preve(reu(X), ato_ilicito), previsivel(ato_ilicito)).
+
 @bom_pai_de_familia(reu(X))/ <=> @razoavel(reu(X));
 			@negligente(reu(X));
 			@cuidadoso(reu(X)));
@@ -242,13 +248,6 @@ obrigacao_de_indemnizar(reu(X),autor(Y)) --> (contrato(Z); obrigacao(W)),
 incumprimento(obrigacao(W)) --> (incumprimento_temporario(obrigacao(W)); incumprimento_definitivo(obrigacao(W))),
 				(incumprimento_total(obrigacao(W)); incumprimento_parcial(obrigacao(W))).
 
-%Query
-querautor(Y)(RCE) :- 
-    call(RCE), 
-    write(ha_responsabilidade_civil_e_obrigacao_de_indemnizar).
-querautor(Y)(RCE) :- 
-    not call(RCE),
-     write(nao_ha_responsabilidade_civil_nem_obrigacao_de_indemnizar).
 
 %factos provados (ereu(X)emplificativo)
 homem(dinis).
